@@ -23,70 +23,53 @@
 // s consist of only digits and English letters. 
 
 // use Manacher's Algorithm
+// tutourial https://www.youtube.com/watch?v=l-XCWjps-UQ
 
-function longestPalindrome(s) {
-    // Check if the length of the string is 0 or 1, in which case it's already a palindrome
-    if (s.length <= 1) {
-        return s;
-    }
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var longestPalindrome = function (s) {
 
-    // Preprocess the string to handle even-length palindromes
-    const processedString = preProcess(s);
-
-    // Length of the processed string
-    const n = processedString.length;
-
-    // Array to store the lengths of palindromes centered at each position in the processed string
-    const p = new Array(n).fill(0);
-
-    // Initialize variables to keep track of the center and right boundary of the current palindrome
-    let center = 0;
-    let right = 0;
-
-    // Loop through the processed string to find palindromes
-    for (let i = 1; i < n - 1; i++) {
-        // Calculate the mirror position for the current position 'i'
-        const mirror = 2 * center - i;
-
-        // If 'i' is within the current palindrome's right boundary,
-        // set the palindrome length based on the mirror position or the difference to the right boundary
-        if (i < right) {
-            p[i] = Math.min(right - i, p[mirror]);
+    function getModifiedString(string) {
+        let modifiedString = "#";
+        for (let i = 0; i < s.length; i++) {
+            modifiedString += `${s[i]}#`
         }
+        return modifiedString;
+    }// add # between chars of input s
 
-        // Attempt to expand the palindrome centered at 'i'
-        while (processedString[i + (1 + p[i])] === processedString[i - (1 + p[i])]) {
-            p[i]++;
-        }
+    const newString = getModifiedString(s); // #s#s#.... so doen't matter if its even or odd pal
 
-        // If the palindrome centered at 'i' expands past the current right boundary,
-        // adjust the center and right boundary
-        if (i + p[i] > right) {
-            center = i;
-            right = i + p[i];
-        }
-    }
+    const p = new Array(newString.length).fill(0); // this keep track the length of pal subString, each element represents a center in s
 
-    // Find the maximum element in the palindrome lengths array 'p'
-    let maxLen = 0;
-    let centerIndex = 0;
-    for (let i = 1; i < n - 1; i++) {
-        if (p[i] > maxLen) {
-            maxLen = p[i];
-            centerIndex = i;
-        }
-    }
+    let center = 0;// this moves when current pal move over the leftBoundary, update center to i
+    let rightBoundary = 0; // this moves when right side of pal move overs it, update to the current right position of pal String
 
-    // Extract the palindrome substring and remove the '#' added during preprocessing
-    const start = Math.floor((centerIndex - maxLen) / 2);
-    return s.substring(start, start + maxLen);
-}
+    for (let i = 0; i < newString.length; i++) {
 
-// Function to preprocess the string by adding '#' between each character and adding '$' at the end
-function preProcess(s) {
-    let result = '#';
-    for (let i = 0; i < s.length; i++) {
-        result += s[i] + '#';
-    }
-    return result + '$'; // '$' is a sentinel character to avoid boundary checks
-}
+        let indexMirror = 2 * center - i;
+
+        if (i < rightBoundary) p[i] = Math.min(rightBoundary - i, p[indexMirror]) // if i havent pass right boundary, we can fast calculate how many times MINIMIUM it can expand , save part of expansion time, update p[i] early(it's 0 initially)
+
+        let right = i + p[i] + 1
+        let left = i - p[i] - 1 // these are the current boundary of pal subString
+
+        while(right < newString.length && left >= 0 && newString[left] === newString[right]) {
+                p[i]++; 
+                right++; 
+                left--;
+        }// if its not out of string on both side and both side is same value, it can expand to longer pal string, also right left boundary have to be expanded
+
+        if(i + p[i] > rightBoundary){
+            center = i ; 
+            rightBoundary = i + p[i];
+        }// when i+ p[i] means right side of current pal str pass the rightBoundary, update center to i, and update rightboundary to current right boundary;
+    } 
+
+    let LongestPalLength = Math.max(...p); 
+    let longestPalCenterindex = p.indexOf(LongestPalLength) // if i cant read this one day, quit coding, so no comment lol
+
+    return newString.substring(longestPalCenterindex - LongestPalLength + 1, longestPalCenterindex + LongestPalLength).replaceAll("#", '')
+
+};
