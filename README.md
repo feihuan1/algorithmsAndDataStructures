@@ -1,5 +1,5 @@
 ## rules
-1. one problem per day since 1/3/2024, if missed one day, quit becoming a developer for life time!## note
+1. one problem per day since 1/3/2024, if missed one day without a emergency regarding rush project or interview, quit becoming a developer for life time!
 2. first thing to do in the morning before breakfast. 
 3. if asked chatGpt, re-do it at sameday without look at solution
 
