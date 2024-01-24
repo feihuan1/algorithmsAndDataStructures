@@ -1,17 +1,28 @@
-//recursive
-function recurSum(n, total = 0) {
-    if (n <= 0) {
-        return total;
-    }
+// 20. Valid Parentheses
 
-    return recurSum(n - 1, total + n);
-}
+// Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+// An input string is valid if:
+
+// Open brackets must be closed by the same type of brackets.
+// Open brackets must be closed in the correct order.
+// Every close bracket has a corresponding open bracket of the same type.
+ 
+// time O(n)
+// stack approach
 function isValid(s) {
+    // 3 case instant false
+    if(s.length % 2 === 1) return false; 
+
+    if(s[0]=== ")" || s[0] === "]" || s[0] ==="}") return false; 
+
+    if(s[s.length - 1]=== "(" || s[s.length - 1] === "[" || s[s.length - 1] ==="{") return false; 
+
+
     const stack = [];
     const brackets = { '(': ')', '{': '}', '[': ']' };
 
     for (let char of s) {
-        console.log(stack)
         if (brackets[char]) {
             // If the character is an opening bracket, push it onto the stack
             stack.push(char);
@@ -27,5 +38,3 @@ function isValid(s) {
     // The stack should be empty if all brackets are properly closed
     return stack.length === 0;
 }
-
-console.log(isValid("(()[]{})"))
