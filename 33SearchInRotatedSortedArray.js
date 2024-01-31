@@ -23,7 +23,7 @@ var search = function(nums, target) {
             return mid;
         }
 
-        // Check if the left half is sorted
+        // Check if the left half is sorted, use <= incase nums is [1]
         if (nums[left] <= nums[mid]) {
             // Check if the target is within the sorted left half
             if (nums[left] <= target && target < nums[mid]) {
