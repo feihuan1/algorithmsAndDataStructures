@@ -1,4 +1,17 @@
-let a = 1
-console.log(a)
+var groupAnagrams = function (strs) {
+    const anagramsMap = new Map(); 
 
-a = 2
+    for (let word of strs) {
+        const sortedWord = word.split('').sort().join('') 
+        if(anagramsMap.has(sortedWord)) {
+            anagramsMap.get(sortedWord).push(word)
+        } else {
+            anagramsMap.set(sortedWord, [word])
+        }
+    }
+
+    return Array.from(anagramsMap.values())
+    
+};
+
+console.log(groupAnagrams(["eat","tea","tan","ate","nat","bat"]))
